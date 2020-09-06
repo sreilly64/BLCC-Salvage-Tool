@@ -1,7 +1,8 @@
 package sreilly64.com.github.gw2salvagetool;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -22,7 +23,9 @@ public class AppInitializer {
         List<Integer> itemIds = fetchItemIds();
         LOGGER.info("Size of all items: " + itemIds.size());
         JSONArray salvageRelatedItemData = getSalvageRelatedItemData(itemIds);
-        LOGGER.info("Size of salvage relate items list: " + salvageRelatedItemData.size());
+        //LOGGER.info(salvageRelatedItemData.toString());
+        LOGGER.info("Size of salvage relate items list: " + salvageRelatedItemData.length());
+
     }
 
     public JSONArray getSalvageRelatedItemData(List<Integer> itemIds) {
@@ -41,21 +44,45 @@ public class AppInitializer {
             JSONArray itemJsonData = getItemData(uriString);
             //filter data based on item attributes so that we are left with only salvage related items
             JSONArray salvageRelatedItemsData = getSalvageRelatedItems(itemJsonData);
-            filteredItemsData.addAll(salvageRelatedItemsData);
+            //add items that weren't filtered out to our global list of salvage related item data
+            for(int i = 0; i < salvageRelatedItemsData.length(); i++){
+                filteredItemsData.put(salvageRelatedItemsData.optJSONObject(i));
+            }
         }
         return filteredItemsData;
     }
 
     private JSONArray getSalvageRelatedItems(JSONArray itemJsonData) {
         JSONArray filteredItemsData = new JSONArray();
-        itemJsonData.forEach(item -> {
-
-        });
+        for(int i = 0; i < itemJsonData.length(); i++){
+            JSONObject itemData = itemJsonData.optJSONObject(i);
+            //extract the value for the "type" key and make sure it is never null
+            String type = null;
+            try {
+                type = itemData.getString("type");
+            } catch (JSONException e) {
+                type = "";
+                LOGGER.info(e.getMessage(), e);
+            }
+            //only care about items that can either be salvaged or is the upgrade being recovered
+            if(type.equals("UpgradeComponent")){
+                filteredItemsData.put(itemData);
+            }else if((type.equals("Weapon") || type.equals("Armor") || type.equals("Trinket")) && itemData.optJSONObject("details").optString("suffix_item_id") != null){
+                //items that both can be salvaged AND have an upgrade component
+                filteredItemsData.put(itemData);
+            }
+        }
         return filteredItemsData;
     }
 
     private JSONArray getItemData(String uriString) {
-        JSONArray itemData = restTemplate.getForEntity(uriString, JSONArray.class).getBody();
+        String response = restTemplate.getForEntity(uriString, String.class).getBody();
+        JSONArray itemData = null;
+        try {
+            itemData = new JSONArray(response);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         //LOGGER.info(itemData.toString());
         return itemData;
     }
