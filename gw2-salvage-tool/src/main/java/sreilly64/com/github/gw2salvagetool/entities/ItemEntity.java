@@ -1,18 +1,28 @@
 package sreilly64.com.github.gw2salvagetool.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
+@Table(name = "items")
 public class ItemEntity {
 
     @Id
+    @Column(name = "item_id")
     private Long item_id;
+    @Column(name = "name")
     private String name;
+    @Column(name = "type")
+    @Enumerated(EnumType.STRING)
     private ItemType type;
+    @Column(name = "buy_price")
     private Integer buy_price;
+    @Column(name = "sell_price")
     private Integer sell_price;
+
+    public ItemEntity(){
+        this(0L, "", null, 0,0);
+    }
 
     public ItemEntity(Long item_id, String name, ItemType type) {
         this(item_id, name, type, 0, 0);
@@ -73,13 +83,11 @@ public class ItemEntity {
         ItemEntity that = (ItemEntity) o;
         return item_id.equals(that.item_id) &&
                 name.equals(that.name) &&
-                type == that.type &&
-                buy_price.equals(that.buy_price) &&
-                sell_price.equals(that.sell_price);
+                type == that.type;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(item_id, name, type, buy_price, sell_price);
+        return Objects.hash(item_id, name, type);
     }
 }
