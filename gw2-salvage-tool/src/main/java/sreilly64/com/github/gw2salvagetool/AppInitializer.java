@@ -5,9 +5,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import sreilly64.com.github.gw2salvagetool.entities.ItemEntity;
+import sreilly64.com.github.gw2salvagetool.entities.ItemType;
+import sreilly64.com.github.gw2salvagetool.services.ItemService;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -17,15 +21,34 @@ public class AppInitializer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AppInitializer.class);
     private RestTemplate restTemplate = new RestTemplateBuilder().build();
+    private ItemService itemService;
 
-    @PostConstruct
+    @Autowired
+    public AppInitializer(ItemService itemService) {
+        this.itemService = itemService;
+    }
+
+    //@PostConstruct
     public void initializeDatabase(){
         List<Integer> itemIds = fetchItemIds();
         LOGGER.info("Size of all items: " + itemIds.size());
         JSONArray salvageRelatedItemData = getSalvageRelatedItemData(itemIds);
         //LOGGER.info(salvageRelatedItemData.toString());
         LOGGER.info("Size of salvage relate items list: " + salvageRelatedItemData.length());
+        addSalvageItemsToDB(salvageRelatedItemData);
+    }
 
+    private void addSalvageItemsToDB(JSONArray salvageRelatedItemData) {
+        for(int i = 0; i < salvageRelatedItemData.length(); i++){
+            JSONObject itemData = salvageRelatedItemData.optJSONObject(i);
+            Long itemId = itemData.optLong("id");
+            String itemName = itemData.optString("name");
+            ItemType itemType = ItemType.getEnumByName(itemData.optString("type"));
+            String iconURL = itemData.optString("icon");
+
+            ItemEntity item = new ItemEntity(itemId, itemName, itemType, iconURL);
+            this.itemService.addItem(item);
+        }
     }
 
     public JSONArray getSalvageRelatedItemData(List<Integer> itemIds) {

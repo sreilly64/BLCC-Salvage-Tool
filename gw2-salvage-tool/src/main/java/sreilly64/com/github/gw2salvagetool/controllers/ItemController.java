@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import sreilly64.com.github.gw2salvagetool.entities.ItemEntity;
 import sreilly64.com.github.gw2salvagetool.services.ItemService;
+
+import java.util.LinkedList;
+import java.util.List;
 
 @Controller
 public class ItemController {
@@ -27,11 +27,40 @@ public class ItemController {
 
     @GetMapping(value = "/items/{item_id}")
     public ResponseEntity<ItemEntity> getItemById(@PathVariable Long item_id){
-        return itemService.getItemById(item_id);
+        ItemEntity item = null;
+        try{
+            item = itemService.getItemById(item_id);
+        }catch(Exception e){
+            LOGGER.info(e.getMessage(), e);
+            return ResponseEntity.notFound().build();
+        }
+        return new ResponseEntity<ItemEntity>(item, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/items")
+    public ResponseEntity<List<ItemEntity>> getAllItems(){
+        List<ItemEntity> itemsList = null;
+        try{
+            itemsList = itemService.getAllItems();
+        }catch(Exception e){
+            LOGGER.info(e.getMessage(), e);
+            return ResponseEntity.badRequest().build();
+        }
+        return new ResponseEntity<List<ItemEntity>>(itemsList, HttpStatus.OK);
     }
 
     @PostMapping(value = "/items")
-    public ResponseEntity<ItemEntity> addItem(@RequestBody ItemEntity item){
-        return itemService.addItem(item);
+    public ResponseEntity<ItemEntity> addItem(@RequestBody ItemEntity newItem){
+        ItemEntity item = null;
+        try{
+            item = itemService.addItem(newItem);
+        }catch(Exception e){
+            LOGGER.info(e.getMessage(), e);
+            return ResponseEntity.badRequest().build();
+        }
+        return new ResponseEntity<ItemEntity>(item, HttpStatus.OK);
     }
+
+    //@RequestMapping(value = "/login", method = RequestMethod.OPTIONS)
+
 }

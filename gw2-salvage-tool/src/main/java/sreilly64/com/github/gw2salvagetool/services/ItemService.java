@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import sreilly64.com.github.gw2salvagetool.entities.ItemEntity;
 import sreilly64.com.github.gw2salvagetool.repositories.ItemRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,13 +20,15 @@ public class ItemService {
         this.itemRepository = itemRepository;
     }
 
-    public ResponseEntity<ItemEntity> getItemById(Long item_id) {
-        return ResponseEntity.of(itemRepository.findById(item_id));
+    public ItemEntity getItemById(Long item_id) {
+        return itemRepository.findById(item_id).get();
     }
 
-    public ResponseEntity<ItemEntity> addItem(ItemEntity item) {
-        return new ResponseEntity<ItemEntity>(itemRepository.save(item), HttpStatus.CREATED);
+    public ItemEntity addItem(ItemEntity item) {
+        return itemRepository.save(item);
     }
 
-
+    public List<ItemEntity> getAllItems() {
+        return itemRepository.findAll();
+    }
 }
