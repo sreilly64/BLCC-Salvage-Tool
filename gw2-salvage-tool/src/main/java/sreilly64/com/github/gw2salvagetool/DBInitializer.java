@@ -17,18 +17,18 @@ import javax.annotation.PostConstruct;
 import java.util.List;
 
 @Component
-public class AppInitializer {
+public class DBInitializer {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AppInitializer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DBInitializer.class);
     private RestTemplate restTemplate = new RestTemplateBuilder().build();
     private ItemService itemService;
 
     @Autowired
-    public AppInitializer(ItemService itemService) {
+    public DBInitializer(ItemService itemService) {
         this.itemService = itemService;
     }
 
-    //@PostConstruct
+    @PostConstruct
     public void initializeDatabase(){
         List<Integer> itemIds = fetchItemIds();
         LOGGER.info("Size of all items: " + itemIds.size());
@@ -45,8 +45,9 @@ public class AppInitializer {
             String itemName = itemData.optString("name");
             ItemType itemType = ItemType.getEnumByName(itemData.optString("type"));
             String iconURL = itemData.optString("icon");
+            Long upgradeId = itemData.optJSONObject("details").optLong("suffix_item_id");
 
-            ItemEntity item = new ItemEntity(itemId, itemName, itemType, iconURL);
+            ItemEntity item = new ItemEntity(itemId, itemName, itemType, iconURL, upgradeId);
             this.itemService.addItem(item);
         }
     }
