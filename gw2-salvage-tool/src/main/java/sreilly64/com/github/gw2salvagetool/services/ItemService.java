@@ -1,16 +1,11 @@
 package sreilly64.com.github.gw2salvagetool.services;
 
-import org.hibernate.cache.spi.support.AbstractReadWriteAccess;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import sreilly64.com.github.gw2salvagetool.entities.ItemEntity;
-import sreilly64.com.github.gw2salvagetool.entities.PriceData;
 import sreilly64.com.github.gw2salvagetool.repositories.ItemRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ItemService {
@@ -32,12 +27,5 @@ public class ItemService {
 
     public List<ItemEntity> getAllItems() {
         return itemRepository.findAll();
-    }
-
-    public ItemEntity updatePrices(PriceData prices){
-        ItemEntity item = getItemById(prices.getItem_id());
-        item.setBuy_price(prices.getBuy_price());
-        item.setSell_price(prices.getSell_price());
-        return itemRepository.save(item);
     }
 }

@@ -10,10 +10,10 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import sreilly64.com.github.gw2salvagetool.entities.CommerceData;
 import sreilly64.com.github.gw2salvagetool.entities.ItemEntity;
-import sreilly64.com.github.gw2salvagetool.entities.PriceData;
 import sreilly64.com.github.gw2salvagetool.services.ItemService;
-import sreilly64.com.github.gw2salvagetool.services.ProfitService;
+import sreilly64.com.github.gw2salvagetool.services.CommerceService;
 
 import java.util.List;
 
@@ -23,68 +23,71 @@ public class PriceDataManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(DBInitializer.class);
     private RestTemplate restTemplate = new RestTemplateBuilder().build();
     private ItemService itemService;
-    private ProfitService profitService;
+    private CommerceService commerceService;
 
     @Autowired
-    public PriceDataManager(ItemService itemService, ProfitService profitService) {
+    public PriceDataManager(ItemService itemService, CommerceService commerceService) {
         this.itemService = itemService;
-        this.profitService = profitService;
+        this.commerceService = commerceService;
     }
 
     @Scheduled(fixedRate = 300000)
     public void updatePriceData(){
         LOGGER.info("Begin updating prices now.");
         List<ItemEntity> items = itemService.getAllItems();
-        JSONArray prices = getItemPrices(items);
-        updateDatabasePrices(prices);
+        JSONArray commerceData = createCommerceDataJSON(items);
+        updateCommerceDatabase(commerceData);
         LOGGER.info("Prices updated.");
-        this.profitService.updateProfits();
+        this.commerceService.updateProfits();
     }
 
-    private void updateDatabasePrices(JSONArray pricesData) {
-        for(int i = 0; i < pricesData.length(); i++){
-            JSONObject data = pricesData.optJSONObject(i);
+    private void updateCommerceDatabase(JSONArray commerceData) {
+        for(int i = 0; i < commerceData.length(); i++){
+            JSONObject data = commerceData.optJSONObject(i);
+
             Long itemId = data.optLong("id");
             Integer buyPrice = data.optJSONObject("buys").optInt("unit_price");
             Integer sellPrice = data.optJSONObject("sells").optInt("unit_price");
+            Integer quantity = data.optJSONObject("sells").optInt("quantity");
 
-            PriceData priceData = new PriceData(itemId, buyPrice, sellPrice);
-            this.itemService.updatePrices(priceData);
+            CommerceData commerceDataPoint = new CommerceData(itemId, buyPrice, sellPrice, quantity);
+
+            this.commerceService.updatePrices(commerceDataPoint);
         }
     }
 
-    private JSONArray getItemPrices(List<ItemEntity> items) {
-        JSONArray itemPrices = new JSONArray();
+    private JSONArray createCommerceDataJSON(List<ItemEntity> items) {
+        JSONArray commerceData = new JSONArray();
         while(!items.isEmpty()){
             //the GW2 API only allows up to 200 items per request
             Integer numItemsPerRequest = Math.min(items.size(), 200);
             //gets the first 200 items from list of all items
             List<ItemEntity> itemsToRequest = items.subList(0, numItemsPerRequest);
             //creates the URI for requesting data on the 200 items
-            String uriString = createItemPriceURI(itemsToRequest);
+            String uriString = createCommerceURI(itemsToRequest);
             //updates list of all item IDs
             items.removeAll(itemsToRequest);
             //get the API response for the requested items
-            JSONArray priceJSONData = getPriceData(uriString);
+            JSONArray priceJSONData = getCommerceData(uriString);
             for(int i = 0; i < priceJSONData.length(); i++){
-                itemPrices.put(priceJSONData.optJSONObject(i));
+                commerceData.put(priceJSONData.optJSONObject(i));
             }
         }
-        return itemPrices;
+        return commerceData;
     }
 
-    private JSONArray getPriceData(String uriString) {
+    private JSONArray getCommerceData(String uriString) {
         String response = restTemplate.getForEntity(uriString, String.class).getBody();
-        JSONArray priceData = null;
+        JSONArray commerceData = null;
         try{
-            priceData = new JSONArray(response);
+            commerceData = new JSONArray(response);
         } catch (JSONException e){
             e.printStackTrace();
         }
-        return priceData;
+        return commerceData;
     }
 
-    private String createItemPriceURI(List<ItemEntity> itemsToRequest) {
+    private String createCommerceURI(List<ItemEntity> itemsToRequest) {
         String uriString = "https://api.guildwars2.com/v2/commerce/prices?ids=";
         StringBuilder sb = new StringBuilder();
         sb.append(uriString);
