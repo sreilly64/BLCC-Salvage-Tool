@@ -17,14 +17,14 @@ import javax.annotation.PostConstruct;
 import java.util.List;
 
 @Component
-public class DBInitializer {
+public class ItemDBInitializer {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DBInitializer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ItemDBInitializer.class);
     private RestTemplate restTemplate = new RestTemplateBuilder().build();
     private ItemService itemService;
 
     @Autowired
-    public DBInitializer(ItemService itemService) {
+    public ItemDBInitializer(ItemService itemService) {
         this.itemService = itemService;
     }
 

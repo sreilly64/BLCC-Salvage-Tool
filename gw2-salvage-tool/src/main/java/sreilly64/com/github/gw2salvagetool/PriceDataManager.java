@@ -20,7 +20,7 @@ import java.util.List;
 @Component
 public class PriceDataManager {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DBInitializer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ItemDBInitializer.class);
     private RestTemplate restTemplate = new RestTemplateBuilder().build();
     private ItemService itemService;
     private CommerceService commerceService;
