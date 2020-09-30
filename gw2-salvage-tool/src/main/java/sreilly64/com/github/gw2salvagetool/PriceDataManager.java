@@ -13,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 import sreilly64.com.github.gw2salvagetool.entities.ItemEntity;
 import sreilly64.com.github.gw2salvagetool.entities.PriceData;
 import sreilly64.com.github.gw2salvagetool.services.ItemService;
+import sreilly64.com.github.gw2salvagetool.services.ProfitService;
 
 import java.util.List;
 
@@ -22,20 +23,22 @@ public class PriceDataManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(DBInitializer.class);
     private RestTemplate restTemplate = new RestTemplateBuilder().build();
     private ItemService itemService;
+    private ProfitService profitService;
 
     @Autowired
-    public PriceDataManager(ItemService itemService) {
+    public PriceDataManager(ItemService itemService, ProfitService profitService) {
         this.itemService = itemService;
+        this.profitService = profitService;
     }
 
     @Scheduled(fixedRate = 300000)
     public void updatePriceData(){
-        LOGGER.info("begin updating prices now.");
-
+        LOGGER.info("Begin updating prices now.");
         List<ItemEntity> items = itemService.getAllItems();
         JSONArray prices = getItemPrices(items);
         updateDatabasePrices(prices);
-        LOGGER.info("prices updated");
+        LOGGER.info("Prices updated.");
+        this.profitService.updateProfits();
     }
 
     private void updateDatabasePrices(JSONArray pricesData) {
