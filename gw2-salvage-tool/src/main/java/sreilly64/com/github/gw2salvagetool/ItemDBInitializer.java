@@ -31,10 +31,11 @@ public class ItemDBInitializer {
     @PostConstruct
     public void initializeDatabase(){
         List<Integer> itemIds = fetchItemIds();
-        LOGGER.info("Size of all items: " + itemIds.size());
+        String itemCount = String.format("Size of all items: %s", itemIds.size());
+        LOGGER.info(itemCount);
         JSONArray salvageRelatedItemData = getSalvageRelatedItemData(itemIds);
-        //LOGGER.info(salvageRelatedItemData.toString());
-        LOGGER.info("Size of salvage relate items list: " + salvageRelatedItemData.length());
+        String salvageRelatedItemCount = String.format("Size of salvage related items list: %s", salvageRelatedItemData.length());
+        LOGGER.info(salvageRelatedItemCount);
         addSalvageItemsToDB(salvageRelatedItemData);
     }
 

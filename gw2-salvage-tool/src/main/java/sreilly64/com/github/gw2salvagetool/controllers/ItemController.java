@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import sreilly64.com.github.gw2salvagetool.entities.ItemEntity;
 import sreilly64.com.github.gw2salvagetool.services.ItemService;
 
-import java.util.LinkedList;
 import java.util.List;
 
 @Controller

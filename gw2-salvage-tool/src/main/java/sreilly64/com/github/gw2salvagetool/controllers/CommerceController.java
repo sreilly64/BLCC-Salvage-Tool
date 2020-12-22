@@ -9,7 +9,7 @@ import sreilly64.com.github.gw2salvagetool.services.CommerceService;
 @RestController
 public class CommerceController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ItemController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommerceController.class);
 
     private CommerceService commerceService;
 
