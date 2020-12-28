@@ -1,4 +1,4 @@
-package sreilly64.com.github.gw2salvagetool;
+package sreilly.com.github.gw2salvagetool;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

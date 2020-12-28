@@ -1,4 +1,4 @@
-package sreilly64.com.github.gw2salvagetool;
+package sreilly.com.github.gw2salvagetool;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import sreilly64.com.github.gw2salvagetool.entities.ItemEntity;
-import sreilly64.com.github.gw2salvagetool.entities.ItemType;
-import sreilly64.com.github.gw2salvagetool.services.ItemService;
+import sreilly.com.github.gw2salvagetool.entities.ItemEntity;
+import sreilly.com.github.gw2salvagetool.entities.ItemType;
+import sreilly.com.github.gw2salvagetool.services.ItemService;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -90,10 +90,9 @@ public class ItemDBInitializer {
                 LOGGER.info(e.getMessage(), e);
             }
             //only care about items that can either be salvaged or is the upgrade being recovered
-            if(type.equals("UpgradeComponent")){
-                filteredItemsData.put(itemData);
-            }else if((type.equals("Weapon") || type.equals("Armor") || type.equals("Trinket")) && itemData.optJSONObject("details").optString("suffix_item_id") != null){
-                //items that both can be salvaged AND have an upgrade component
+            Boolean isUpgrade = type.equals("UpgradeComponent");
+            Boolean isEquipmentWithUpgrade = (type.equals("Weapon") || type.equals("Armor") || type.equals("Trinket")) && itemData.optJSONObject("details").optString("suffix_item_id") != null;
+            if(isEquipmentWithUpgrade || isUpgrade){
                 filteredItemsData.put(itemData);
             }
         }

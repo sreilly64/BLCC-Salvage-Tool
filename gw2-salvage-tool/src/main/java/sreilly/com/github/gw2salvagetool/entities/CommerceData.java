@@ -1,4 +1,4 @@
-package sreilly64.com.github.gw2salvagetool.entities;
+package sreilly.com.github.gw2salvagetool.entities;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -14,55 +14,55 @@ public class CommerceData {
 
     @Id
     @Column(name = "item_id")
-    private Long item_id;
+    private Long itemId;
     @Column(name = "buy_price")
-    private Integer buy_price;
+    private Integer buyPrice;
     @Column(name = "sell_price")
-    private Integer sell_price;
+    private Integer sellPrice;
     @Column(name = "profit")
     private Integer profit;
     @Column(name = "quantity")
     private Integer quantity;
 
     @Autowired
-    public CommerceData(Long item_id, Integer buy_price, Integer sell_price, Integer profit, Integer quantity) {
-        this.item_id = item_id;
-        this.buy_price = buy_price;
-        this.sell_price = sell_price;
+    public CommerceData(Long itemId, Integer buyPrice, Integer sellPrice, Integer profit, Integer quantity) {
+        this.itemId = itemId;
+        this.buyPrice = buyPrice;
+        this.sellPrice = sellPrice;
         this.profit = profit;
         this.quantity = quantity;
     }
 
-    public CommerceData(Long item_id, Integer buy_price, Integer sell_price, Integer quantity) {
-        this(item_id, buy_price, sell_price, 0, quantity);
+    public CommerceData(Long itemId, Integer buyPrice, Integer sellPrice, Integer quantity) {
+        this(itemId, buyPrice, sellPrice, 0, quantity);
     }
 
     public CommerceData() {
         this(0L, 0, 0, 0, 0);
     }
 
-    public Long getItem_id() {
-        return item_id;
+    public Long getItemId() {
+        return itemId;
     }
 
-    public void setItem_id(Long item_id) {
-        this.item_id = item_id;
+    public void setItemId(Long itemId) {
+        this.itemId = itemId;
     }
 
-    public Integer getBuy_price() {
-        return buy_price;
+    public Integer getBuyPrice() {
+        return buyPrice;
     }
 
-    public void setBuy_price(Integer buy_price) {
-        this.buy_price = buy_price;
+    public void setBuyPrice(Integer buyPrice) {
+        this.buyPrice = buyPrice;
     }
 
-    public Integer getSell_price() {
-        return sell_price;
+    public Integer getSellPrice() {
+        return sellPrice;
     }
 
-    public void setSell_price(Integer sell_price) {
-        this.sell_price = sell_price;
+    public void setSellPrice(Integer sellPrice) {
+        this.sellPrice = sellPrice;
     }
 
     public Integer getProfit() {
@@ -86,11 +86,11 @@ public class CommerceData {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CommerceData that = (CommerceData) o;
-        return item_id.equals(that.item_id);
+        return itemId.equals(that.itemId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(item_id);
+        return Objects.hash(itemId);
     }
 }

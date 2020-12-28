@@ -1,4 +1,4 @@
-package sreilly64.com.github.gw2salvagetool.entities;
+package sreilly.com.github.gw2salvagetool.entities;
 
 public enum ItemType {
 

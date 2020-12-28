@@ -1,9 +1,9 @@
-package sreilly64.com.github.gw2salvagetool.services;
+package sreilly.com.github.gw2salvagetool.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sreilly64.com.github.gw2salvagetool.entities.ItemEntity;
-import sreilly64.com.github.gw2salvagetool.repositories.ItemRepository;
+import sreilly.com.github.gw2salvagetool.repositories.ItemRepository;
+import sreilly.com.github.gw2salvagetool.entities.ItemEntity;
 
 import java.util.List;
 
@@ -17,8 +17,8 @@ public class ItemService {
         this.itemRepository = itemRepository;
     }
 
-    public ItemEntity getItemById(Long item_id) {
-        return itemRepository.findById(item_id).get();
+    public ItemEntity getItemById(Long itemId) {
+        return itemRepository.findById(itemId).orElse(new ItemEntity());
     }
 
     public ItemEntity addItem(ItemEntity item) {

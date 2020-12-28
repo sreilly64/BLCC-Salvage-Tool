@@ -1,4 +1,4 @@
-package sreilly64.com.github.gw2salvagetool;
+package sreilly.com.github.gw2salvagetool;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -10,17 +10,17 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import sreilly64.com.github.gw2salvagetool.entities.CommerceData;
-import sreilly64.com.github.gw2salvagetool.entities.ItemEntity;
-import sreilly64.com.github.gw2salvagetool.services.ItemService;
-import sreilly64.com.github.gw2salvagetool.services.CommerceService;
+import sreilly.com.github.gw2salvagetool.entities.CommerceData;
+import sreilly.com.github.gw2salvagetool.entities.ItemEntity;
+import sreilly.com.github.gw2salvagetool.services.ItemService;
+import sreilly.com.github.gw2salvagetool.services.CommerceService;
 
 import java.util.List;
 
 @Component
 public class PriceDataManager {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ItemDBInitializer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PriceDataManager.class);
     private RestTemplate restTemplate = new RestTemplateBuilder().build();
     private ItemService itemService;
     private CommerceService commerceService;
@@ -79,11 +79,12 @@ public class PriceDataManager {
 
     private JSONArray getCommerceData(String uriString) {
         String response = restTemplate.getForEntity(uriString, String.class).getBody();
-        JSONArray commerceData = null;
+        JSONArray commerceData;
         try{
             commerceData = new JSONArray(response);
         } catch (JSONException e){
             e.printStackTrace();
+            commerceData = new JSONArray();
         }
         return commerceData;
     }
@@ -93,7 +94,7 @@ public class PriceDataManager {
         StringBuilder sb = new StringBuilder();
         sb.append(uriString);
         for(ItemEntity item: itemsToRequest){
-            sb.append(item.getItem_id().toString());
+            sb.append(item.getItemId().toString());
             sb.append(",");
         }
         sb.deleteCharAt(sb.lastIndexOf(","));

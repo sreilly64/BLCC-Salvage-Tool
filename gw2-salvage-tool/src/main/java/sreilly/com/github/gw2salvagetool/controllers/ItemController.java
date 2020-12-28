@@ -1,4 +1,4 @@
-package sreilly64.com.github.gw2salvagetool.controllers;
+package sreilly.com.github.gw2salvagetool.controllers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,8 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import sreilly64.com.github.gw2salvagetool.entities.ItemEntity;
-import sreilly64.com.github.gw2salvagetool.services.ItemService;
+import sreilly.com.github.gw2salvagetool.entities.ItemEntity;
+import sreilly.com.github.gw2salvagetool.services.ItemService;
 
 import java.util.List;
 
@@ -24,16 +24,16 @@ public class ItemController {
         this.itemService = itemService;
     }
 
-    @GetMapping(value = "/items/{item_id}")
-    public ResponseEntity<ItemEntity> getItemById(@PathVariable Long item_id){
+    @GetMapping(value = "/items/{itemId}")
+    public ResponseEntity<ItemEntity> getItemById(@PathVariable Long itemId){
         ItemEntity item = null;
         try{
-            item = itemService.getItemById(item_id);
+            item = itemService.getItemById(itemId);
         }catch(Exception e){
             LOGGER.info(e.getMessage(), e);
             return ResponseEntity.notFound().build();
         }
-        return new ResponseEntity<ItemEntity>(item, HttpStatus.OK);
+        return new ResponseEntity<>(item, HttpStatus.OK);
     }
 
     @GetMapping(value = "/items")
@@ -45,7 +45,7 @@ public class ItemController {
             LOGGER.info(e.getMessage(), e);
             return ResponseEntity.badRequest().build();
         }
-        return new ResponseEntity<List<ItemEntity>>(itemsList, HttpStatus.OK);
+        return new ResponseEntity<>(itemsList, HttpStatus.OK);
     }
 
     @PostMapping(value = "/items")
@@ -57,7 +57,7 @@ public class ItemController {
             LOGGER.info(e.getMessage(), e);
             return ResponseEntity.badRequest().build();
         }
-        return new ResponseEntity<ItemEntity>(item, HttpStatus.OK);
+        return new ResponseEntity<>(item, HttpStatus.OK);
     }
 
     //@RequestMapping(value = "/login", method = RequestMethod.OPTIONS)

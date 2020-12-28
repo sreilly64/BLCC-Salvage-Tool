@@ -1,4 +1,4 @@
-package sreilly64.com.github.gw2salvagetool.entities;
+package sreilly.com.github.gw2salvagetool.entities;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -9,7 +9,7 @@ public class ItemEntity {
 
     @Id
     @Column(name = "item_id")
-    private Long item_id;
+    private Long itemId;
     @Column(name = "name")
     private String name;
     @Column(name = "type")
@@ -18,26 +18,26 @@ public class ItemEntity {
     @Column(name = "icon")
     private String icon;
     @Column(name = "upgrade_id")
-    private Long upgrade_id;
+    private Long upgradeId;
 
     public ItemEntity(){
         this(0L, "", null, "", 0L);
     }
 
-    public ItemEntity(Long item_id, String name, ItemType type, String icon, Long upgrade_id) {
-        this.item_id = item_id;
+    public ItemEntity(Long itemId, String name, ItemType type, String icon, Long upgradeId) {
+        this.itemId = itemId;
         this.name = name;
         this.type = type;
         this.icon = icon;
-        this.upgrade_id = upgrade_id;
+        this.upgradeId = upgradeId;
     }
 
-    public Long getItem_id() {
-        return item_id;
+    public Long getItemId() {
+        return itemId;
     }
 
-    public void setItem_id(Long item_id) {
-        this.item_id = item_id;
+    public void setItemId(Long itemId) {
+        this.itemId = itemId;
     }
 
     public String getName() {
@@ -64,12 +64,12 @@ public class ItemEntity {
         this.icon = icon;
     }
 
-    public Long getUpgrade_id() {
-        return upgrade_id;
+    public Long getUpgradeId() {
+        return upgradeId;
     }
 
-    public void setUpgrade_id(Long upgrade_id) {
-        this.upgrade_id = upgrade_id;
+    public void setUpgradeId(Long upgradeId) {
+        this.upgradeId = upgradeId;
     }
 
     @Override
@@ -77,13 +77,13 @@ public class ItemEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ItemEntity that = (ItemEntity) o;
-        return item_id.equals(that.item_id) &&
+        return itemId.equals(that.itemId) &&
                 name.equals(that.name) &&
                 type == that.type;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(item_id, name, type);
+        return Objects.hash(itemId, name, type);
     }
 }
