@@ -37,7 +37,7 @@ public class PriceDataManager {
         List<ItemEntity> items = itemService.getAllItems();
         JSONArray commerceData = createCommerceDataJSON(items);
         updateCommerceDatabase(commerceData);
-        LOGGER.info("Prices updated.\nBegin updating profits");
+        LOGGER.info("Prices updated. Begin updating profits");
         this.commerceService.updateProfits();
         LOGGER.info("Profits updated.");
     }

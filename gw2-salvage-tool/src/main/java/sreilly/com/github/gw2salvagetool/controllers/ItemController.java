@@ -48,17 +48,17 @@ public class ItemController {
         return new ResponseEntity<>(itemsList, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/items")
-    public ResponseEntity<ItemEntity> addItem(@RequestBody ItemEntity newItem){
-        ItemEntity item = null;
-        try{
-            item = itemService.addItem(newItem);
-        }catch(Exception e){
-            LOGGER.info(e.getMessage(), e);
-            return ResponseEntity.badRequest().build();
-        }
-        return new ResponseEntity<>(item, HttpStatus.OK);
-    }
+//    @PostMapping(value = "/items")
+//    public ResponseEntity<ItemEntity> addItem(@RequestBody ItemEntity newItem){
+//        ItemEntity item = null;
+//        try{
+//            item = itemService.addItem(newItem);
+//        }catch(Exception e){
+//            LOGGER.info(e.getMessage(), e);
+//            return ResponseEntity.badRequest().build();
+//        }
+//        return new ResponseEntity<>(item, HttpStatus.OK);
+//    }
 
     //@RequestMapping(value = "/login", method = RequestMethod.OPTIONS)
 

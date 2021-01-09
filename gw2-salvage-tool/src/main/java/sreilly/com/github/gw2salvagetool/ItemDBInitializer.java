@@ -20,7 +20,7 @@ import java.util.List;
 public class ItemDBInitializer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemDBInitializer.class);
-    private RestTemplate restTemplate = new RestTemplateBuilder().build();
+    private final RestTemplate restTemplate = new RestTemplateBuilder().build();
     private ItemService itemService;
 
     @Autowired
@@ -31,11 +31,13 @@ public class ItemDBInitializer {
     @PostConstruct
     public void initializeDatabase(){
         List<Integer> itemIds = fetchItemIds();
-        String itemCount = String.format("Size of all items: %s", itemIds.size());
+        String itemCount = String.format("Total number of items: %s", itemIds.size());
         LOGGER.info(itemCount);
+
         JSONArray salvageRelatedItemData = getSalvageRelatedItemData(itemIds);
-        String salvageRelatedItemCount = String.format("Size of salvage related items list: %s", salvageRelatedItemData.length());
+        String salvageRelatedItemCount = String.format("Number of salvage related items: %s", salvageRelatedItemData.length());
         LOGGER.info(salvageRelatedItemCount);
+
         addSalvageItemsToDB(salvageRelatedItemData);
     }
 
@@ -56,7 +58,7 @@ public class ItemDBInitializer {
     public JSONArray getSalvageRelatedItemData(List<Integer> itemIds) {
         JSONArray filteredItemsData = new JSONArray();
         while(!itemIds.isEmpty()){
-            //the GW2 API only allows up to 200 items per request
+            //the GW2 API only allows up to 200 items per request, so request 200 or however many items are left in the list
             Integer numItemsPerRequest = Math.min(itemIds.size(), 200);
             //gets the first 200 items from list of all IDs
             List<Integer> itemsToRequest = itemIds.subList(0, numItemsPerRequest);
@@ -64,7 +66,6 @@ public class ItemDBInitializer {
             String uriString = createItemDataURI(itemsToRequest);
             //updates list of all item IDs
             itemIds.removeAll(itemsToRequest);
-            //LOGGER.info(uriString);
             //get the API response for the requested items
             JSONArray itemJsonData = getItemData(uriString);
             //filter data based on item attributes so that we are left with only salvage related items
@@ -81,15 +82,9 @@ public class ItemDBInitializer {
         JSONArray filteredItemsData = new JSONArray();
         for(int i = 0; i < itemJsonData.length(); i++){
             JSONObject itemData = itemJsonData.optJSONObject(i);
-            //extract the value for the "type" key and make sure it is never null
-            String type = null;
-            try {
-                type = itemData.getString("type");
-            } catch (JSONException e) {
-                type = "";
-                LOGGER.info(e.getMessage(), e);
-            }
-            //only care about items that can either be salvaged or is the upgrade being recovered
+            //extract the value for the "type" key
+            String type = itemData.optString("type");
+            //only care about items that can either be salvaged or is the upgrade being recovered from salvaged items
             Boolean isUpgrade = type.equals("UpgradeComponent");
             Boolean isEquipmentWithUpgrade = (type.equals("Weapon") || type.equals("Armor") || type.equals("Trinket")) && itemData.optJSONObject("details").optString("suffix_item_id") != null;
             if(isEquipmentWithUpgrade || isUpgrade){
@@ -107,7 +102,6 @@ public class ItemDBInitializer {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        //LOGGER.info(itemData.toString());
         return itemData;
     }
 

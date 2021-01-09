@@ -4,14 +4,14 @@ public enum ItemType {
 
     Weapon("Weapon"), Armor("Armor"), Trinket("Trinket"), UpgradeComponent("UpgradeComponent"), Other("Other");
 
-    private String name;
+    private final String name;
 
     public String getName(){
         return this.name;
     }
 
     private ItemType(String name){
-        this.name =  name;
+        this.name = name;
     }
 
     public static ItemType getEnumByName(String name){

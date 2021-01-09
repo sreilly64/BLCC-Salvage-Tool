@@ -28,7 +28,7 @@ public class CommerceService {
                 CommerceData upgradeCommerce = this.commerceRepository.findById(item.getUpgradeId()).orElse(null);
                 CommerceData itemCommerce = this.commerceRepository.findById(item.getItemId()).orElse(null);
                 if(itemCommerce != null && upgradeCommerce != null){
-                    String profitString = String.valueOf(Math.round((upgradeCommerce.getSellPrice() - itemCommerce.getBuyPrice()) * 0.85));
+                    String profitString = String.valueOf(Math.round((upgradeCommerce.getSellPrice() * 0.85) - itemCommerce.getBuyPrice()));
                     Integer profit = Integer.parseInt(profitString);
                     itemCommerce.setProfit(profit);
                     this.commerceRepository.save(itemCommerce);
