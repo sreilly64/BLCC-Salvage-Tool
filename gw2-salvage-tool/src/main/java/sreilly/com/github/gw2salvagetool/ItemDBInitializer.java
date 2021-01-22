@@ -21,7 +21,7 @@ public class ItemDBInitializer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemDBInitializer.class);
     private final RestTemplate restTemplate = new RestTemplateBuilder().build();
-    private ItemService itemService;
+    private final ItemService itemService;
 
     @Autowired
     public ItemDBInitializer(ItemService itemService) {
@@ -31,19 +31,24 @@ public class ItemDBInitializer {
     @PostConstruct
     public void initializeDatabase(){
         List<Integer> itemIds = fetchItemIds();
+
         String itemCount = String.format("Total number of items: %s", itemIds.size());
         LOGGER.info(itemCount);
 
         JSONArray salvageRelatedItemData = getSalvageRelatedItemData(itemIds);
+
         String salvageRelatedItemCount = String.format("Number of salvage related items: %s", salvageRelatedItemData.length());
         LOGGER.info(salvageRelatedItemCount);
 
         addSalvageItemsToDB(salvageRelatedItemData);
+        LOGGER.info("Item table initilization completed.");
     }
 
     private void addSalvageItemsToDB(JSONArray salvageRelatedItemData) {
+        LOGGER.info("Adding relevant items to DB...");
         for(int i = 0; i < salvageRelatedItemData.length(); i++){
             JSONObject itemData = salvageRelatedItemData.optJSONObject(i);
+            //could use a builder here
             Long itemId = itemData.optLong("id");
             String itemName = itemData.optString("name");
             ItemType itemType = ItemType.getEnumByName(itemData.optString("type"));
@@ -56,6 +61,7 @@ public class ItemDBInitializer {
     }
 
     public JSONArray getSalvageRelatedItemData(List<Integer> itemIds) {
+        LOGGER.info("Filtering items...");
         JSONArray filteredItemsData = new JSONArray();
         while(!itemIds.isEmpty()){
             //the GW2 API only allows up to 200 items per request, so request 200 or however many items are left in the list
