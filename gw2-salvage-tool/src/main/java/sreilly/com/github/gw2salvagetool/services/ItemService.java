@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import sreilly.com.github.gw2salvagetool.repositories.ItemRepository;
 import sreilly.com.github.gw2salvagetool.entities.ItemEntity;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -27,5 +29,13 @@ public class ItemService {
 
     public List<ItemEntity> getAllItems() {
         return itemRepository.findAll();
+    }
+
+    public List<Long> getAllDBItemIDs(){
+        List<Long> output = new ArrayList<>();
+        for(ItemEntity itemEntity: getAllItems()){
+            output.add(itemEntity.getItemId());
+        }
+        return output;
     }
 }

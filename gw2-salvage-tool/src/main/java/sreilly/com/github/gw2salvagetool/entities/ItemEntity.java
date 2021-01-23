@@ -1,9 +1,12 @@
 package sreilly.com.github.gw2salvagetool.entities;
 
+import lombok.Builder;
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
+@Builder
 @Table(name = "items")
 public class ItemEntity {
 
