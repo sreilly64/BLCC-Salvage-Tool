@@ -9,10 +9,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Component
 public class GW2APIService {
@@ -89,7 +86,6 @@ public class GW2APIService {
         }
         return itemData;
     }
-
 
     public String createURI(List<Long> itemIds, String baseUri) {
         StringBuilder sb = new StringBuilder();

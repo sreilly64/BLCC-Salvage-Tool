@@ -6,13 +6,12 @@ import sreilly.com.github.gw2salvagetool.repositories.ItemRepository;
 import sreilly.com.github.gw2salvagetool.entities.ItemEntity;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 @Service
 public class ItemService {
 
-    private ItemRepository itemRepository;
+    private final ItemRepository itemRepository;
 
     @Autowired
     public ItemService(ItemRepository itemRepository){
